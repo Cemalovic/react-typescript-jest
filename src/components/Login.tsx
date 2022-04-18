@@ -43,27 +43,31 @@ export class Login extends Component<LoginProps, LoginState> {
   private async handleSubmit(e: SyntheticEvent) {
     e.preventDefault()
 
-    this.setState({
-      loginAttempted: true
-    })
-
-    const result = await this.props.authService.login(
-      this.state.userName,
-      this.state.password
-    )
-
-    if (result) {
+    try {
       this.setState({
-        loginSuccesfull: true
+        loginAttempted: true
       })
 
-      this.props.setUser(result)
+      const result = await this.props.authService.login(
+        this.state.userName,
+        this.state.password
+      )
 
-      history.push('/profile')
-    } else {
-      this.setState({
-        loginSuccesfull: false
-      })
+      if (result) {
+        this.setState({
+          loginSuccesfull: true
+        })
+
+        this.props.setUser(result)
+
+        history.push('/profile')
+      } else {
+        this.setState({
+          loginSuccesfull: false
+        })
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -72,7 +76,7 @@ export class Login extends Component<LoginProps, LoginState> {
 
     if (this.state.loginAttempted) {
       if (this.state.loginSuccesfull) {
-        loginMessage = <label>Login succesfull</label>
+        loginMessage = <label>Login successful</label>
       } else {
         loginMessage = <label>Login failed</label>
       }
